@@ -2,7 +2,7 @@
 
 'use client'
 import { Button } from "../ui/button"
-import { Card, CardHeader ,CardTitle,CardDescription, CardContent, CardFooter} from "../ui/card"
+import { Card, CardHeader ,CardContent, CardFooter} from "../ui/card"
 import { FaGithub } from "react-icons/fa"
 import { FcGoogle } from "react-icons/fc"
 import Link from "next/link"
@@ -12,7 +12,8 @@ import { toast } from "sonner"
 
 export const RegisterForm = () =>{ 
     const [formData, setFormData] = useState({
-        username: '',
+        name: '',
+        email: '',
         password: ''
     });
 
@@ -28,17 +29,17 @@ export const RegisterForm = () =>{
         // send the details to the api
         e?.preventDefault();
         try {
-            const response = await axios.post("https://cardvault-pmq9.onrender.com/api/v1/signup",formData,
+            const response = await axios.post("http://localhost:3000/api/register",formData,
                 {
                     headers: {
                         "Content-Type":"Application/json"
                     }
                 }
             );
-            console.log("REsponse is ", response);
-            if(response.status!=200)
+            console.log("REsponse Data is ", response.data);
+            if(response.data.exists)
             {
-                throw new Error("Debugging")
+                toast.error("The user already exists, Enter new credentials! ")
             }
             else {
                 toast.success("Successfully registered! ")
@@ -46,12 +47,14 @@ export const RegisterForm = () =>{
         }
         catch(error)
         {
-            toast.error("Error signing in ! ");
-          console.error('Registration  failed:', error);
+            toast.error("Error signing in currently !");
+            console.error('Registration  failed:', error);
         }
 
         console.log("Form submitted! ")
-        console.log("The email and password is ", formData.username, "\n Password ",formData.password );
+        console.log("The email and password is ", formData.name, "\n Password ",formData.password, 
+            "Email is ", formData.email
+         );
     }
     return (
         <>
@@ -64,14 +67,26 @@ export const RegisterForm = () =>{
             <form onSubmit={handleSubmit}>
           <div className="flex flex-col gap-6">
             <div className="grid gap-2">
-              <label htmlFor="username">Email</label>
+              <label htmlFor="name">Name</label>
               <input
-                id="username"
+                id="name"
                 type="text"
-                placeholder="mr#erjbsv"
+                placeholder="johndoe"
                 className="border-purple-200 border-3 solid p-1"
                 required
-                value={formData.username}
+                value={formData.name}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="grid gap-2">
+              <label htmlFor="email">Email</label>
+              <input
+                id="email"
+                type="email"
+                placeholder="johndoe@yahoo.com"
+                className="border-purple-200 border-3 solid p-1"
+                required
+                value={formData.email}
                 onChange={handleChange}
               />
             </div>

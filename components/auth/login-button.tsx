@@ -2,6 +2,7 @@
 'use client'
 import React from "react"
 import { useRouter } from "next/navigation"
+import { db } from "@/lib/db"
 interface LoginButtonProps {
     children: React.ReactNode,
     mode?:string,
