@@ -10,6 +10,7 @@ import React, { useState } from "react"
 import axios from "axios"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
+import { signIn } from "next-auth/react"
 export const RegisterForm = () =>{ 
    
     const [formData, setFormData] = useState({
@@ -58,6 +59,46 @@ export const RegisterForm = () =>{
         console.log("The email and password is ", formData.name, "\n Password ",formData.password, 
             "Email is ", formData.email
          );
+    }
+
+    const GoogleLoginhandle = async  () => {
+        try {
+            console.log("Google button clicked ! ")
+            const res = await signIn("google", {
+              redirect: false, // prevent auto redirect
+              callbackUrl: "/dashboard", // where to go after login
+            });
+        
+            if (res?.error) {
+              toast.error("Google login failed!");
+              console.error("Google login error:", res.error);
+            } else {
+              toast.success("Signed in with Google!");
+              router.push("/dashboard");
+            }
+          } catch (error) {
+            console.error("Unexpected Google login error:", error);
+            toast.error("Something went wrong. Try again!");
+          }
+    }
+    const handlegitlogin =async () => {
+        try {
+            const res = await signIn("github", {
+              redirect: false, // prevent auto redirect
+              callbackUrl: "/dashboard", // where to go after login
+            });
+        
+            if (res?.error) {
+              toast.error("GitHub login failed!");
+              console.error("GitHub login error:", res.error);
+            } else {
+              toast.success("Signed in with GitHub!");
+              router.push("/dashboard");
+            }
+          } catch (error) {
+            console.error("Unexpected GitHub login error:", error);
+            toast.error("Something went wrong. Try again!");
+          }
     }
     return (
         <>
@@ -118,9 +159,11 @@ export const RegisterForm = () =>{
             <CardFooter className="flex flex-col gap-4">
                 {/*add socials here like google and github */}
                 <div className="flex justify-between w-full">
-                    <Button variant="outline" className="w-[75px] h-[40px]"><FcGoogle 
+                    <Button variant="outline" className="w-[75px] h-[40px]"
+                    onClick={GoogleLoginhandle}><FcGoogle 
                     className="h-10 w-10" /></Button>
-                    <Button variant="outline" className="w-[75px] h-[40px]"><FaGithub
+                    <Button variant="outline" className="w-[75px] h-[40px]"
+                    onClick={handlegitlogin}><FaGithub
                     className="h-10 w-10" /></Button>
                 </div>
                 <div className="w-full flex justify-center items-center">

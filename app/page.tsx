@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { LoginButton } from "@/components/auth/login-button";
+import { DashboardButton } from "@/components/auth/dashboard-button";
 
 export default function Home() {
   return (
@@ -14,12 +15,18 @@ export default function Home() {
             <p className="text-white text-lg">
               Authentication Service
             </p>
-            <div className="flex justify-center items-center">
+            <div className="flex justify-center items-center gap-2">
               <LoginButton>
                 <Button
                 className="p-2 rounded-full text-gray-800" variant="secondary"
                 >Log In</Button>
               </LoginButton>
+              <DashboardButton>
+              <Button className="p-2 rounded-full text-white bg-purple-300">
+                Go to Dashboard
+              </Button>
+              </DashboardButton>
+
             </div>
           </div>
         </div>
