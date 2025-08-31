@@ -15,7 +15,7 @@ export const LoginButton = ({children
     // children prop to be sent
     const route = useRouter();
     const handleClick = () => {
-        route.push('/auth/login');
+        route.push('/login');
     }
     return (
         <>

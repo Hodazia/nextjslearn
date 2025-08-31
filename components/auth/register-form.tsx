@@ -9,8 +9,9 @@ import Link from "next/link"
 import React, { useState } from "react"
 import axios from "axios"
 import { toast } from "sonner"
-
+import { useRouter } from "next/navigation"
 export const RegisterForm = () =>{ 
+   
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -25,6 +26,7 @@ export const RegisterForm = () =>{
         }));
     };
 
+    const router = useRouter();
     const handleSubmit = async (e:React.SyntheticEvent) => {
         // send the details to the api
         e?.preventDefault();
@@ -39,7 +41,8 @@ export const RegisterForm = () =>{
             console.log("REsponse Data is ", response.data);
             if(response.data.exists)
             {
-                toast.error("The user already exists, Enter new credentials! ")
+                toast.error("The user already exists, Enter new credentials! ");
+                router.push("/signin");
             }
             else {
                 toast.success("Successfully registered! ")
@@ -47,7 +50,7 @@ export const RegisterForm = () =>{
         }
         catch(error)
         {
-            toast.error("Error signing in currently !");
+            toast.error("Error in currently !");
             console.error('Registration  failed:', error);
         }
 
@@ -122,7 +125,7 @@ export const RegisterForm = () =>{
                 </div>
                 <div className="w-full flex justify-center items-center">
                     <Button>
-                        <Link href="/auth/login">
+                        <Link href="/login">
                         Already have an account Sign IN
                         </Link>
                     </Button>

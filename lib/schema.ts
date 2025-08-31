@@ -10,6 +10,6 @@ export const RegisterSchema = z.object({
 })
 
 export const SignInSchema = z.object({
-    username: z.string(),
+    email: z.string().email(),
     password:z.string()
 })

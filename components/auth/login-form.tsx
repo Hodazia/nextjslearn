@@ -9,10 +9,13 @@ import Link from "next/link"
 import React, { useState } from "react"
 import axios from "axios"
 import { toast } from "sonner"
+import { useRouter } from "next/navigation"
+import { signIn } from "next-auth/react"
 
 export const LoginForm = () =>{ 
+    const router = useRouter();
     const [formData, setFormData] = useState({
-        username: '',
+        email: '',
         password: ''
     });
 
@@ -27,31 +30,22 @@ export const LoginForm = () =>{
     const handleSubmit = async (e:React.SyntheticEvent) => {
         // send the details to the api
         e?.preventDefault();
-        try {
-            const response = await axios.post("https://cardvault-pmq9.onrender.com/api/v1/signin",formData,
-                {
-                    headers: {
-                        "Content-Type":"Application/json"
-                    }
-                }
-            );
-            console.log("REsponse is ", response);
-            if(response.status!=200)
-            {
-                throw new Error("Debugging")
-            }
-            else {
-                toast.success("Successfully signed in! ")
-            }
-        }
-        catch(error)
-        {
-            toast.error("Error signing in ! ");
-          console.error('Login failed:', error);
+        // ✅ Call NextAuth's signIn instead of axios
+        const res = await signIn("credentials", {
+            redirect: false, // prevent auto redirect
+            email: formData.email,
+            password: formData.password,
+        });
+    
+        if (res?.error) {
+            toast.error("Invalid email or password!");
+        } else {
+            toast.success("Successfully signed in!");
+            router.push("/dashboard"); // redirect wherever you want
         }
 
         console.log("Form submitted! ")
-        console.log("The email and password is ", formData.username, "\n Password ",formData.password );
+        console.log("The email and password is ", formData.email, "\n Password ",formData.password );
     }
     return (
         <>
@@ -64,14 +58,14 @@ export const LoginForm = () =>{
             <form onSubmit={handleSubmit}>
           <div className="flex flex-col gap-6">
             <div className="grid gap-2">
-              <label htmlFor="username">Email</label>
+              <label htmlFor="email">Email</label>
               <input
-                id="username"
+                id="email"
                 type="text"
                 placeholder="mr#erjbsv"
-                className="border-purple-200 border-3 solid p-1"
+                className="border-purple-200 border-2 solid p-1"
                 required
-                value={formData.username}
+                value={formData.email}
                 onChange={handleChange}
               />
             </div>
@@ -87,7 +81,7 @@ export const LoginForm = () =>{
               </div>
               <input id="password" type="password" required
               placeholder="*******"
-              className="w-full border-purple-200 border-3 solid p-1"
+              className="w-full border-purple-200 border-2 solid p-1"
               value={formData.password}
               onChange={handleChange}/>
             </div>
@@ -107,7 +101,7 @@ export const LoginForm = () =>{
                 </div>
                 <div className="w-full flex justify-center items-center">
                     <Button>
-                        <Link href="/auth/register">
+                        <Link href="/register">
                         Don't have an account
                         </Link>
                     </Button>
